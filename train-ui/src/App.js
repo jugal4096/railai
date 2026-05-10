@@ -34,7 +34,7 @@ function App() {
   useEffect(() => {
 
     fetch(
-      "http://127.0.0.1:8000/trains"
+      "http://https://railai-backend1.onrender.com/trains"
     )
 
       .then((res) => res.json())
@@ -89,7 +89,7 @@ function App() {
 
       const response = await fetch(
 
-        `http://127.0.0.1:8000/predict/${train.train_no}`
+        `https://railai-backend.onrender1.com/predict/${train.train_no}`
 
       );
 
