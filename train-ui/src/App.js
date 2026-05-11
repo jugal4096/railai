@@ -5,6 +5,13 @@ import React, {
 
 import "./App.css";
 
+// ============================================
+// BACKEND URL
+// ============================================
+
+const API =
+  "https://railai-backend1.onrender.com";
+
 function App() {
 
   const [trains, setTrains] =
@@ -27,19 +34,19 @@ function App() {
   const [loading, setLoading] =
     useState(false);
 
-  // =================================================
-  // FETCH TRAINS
-  // =================================================
+  // ============================================
+  // FETCH ACTIVE TRAINS
+  // ============================================
 
   useEffect(() => {
 
-    fetch(
-      "http://https://railai-backend1.onrender.com/trains"
-    )
+    fetch(`${API}/trains`)
 
       .then((res) => res.json())
 
       .then((data) => {
+
+        console.log(data);
 
         setTrains(data);
 
@@ -53,9 +60,9 @@ function App() {
 
   }, []);
 
-  // =================================================
-  // FILTER ROUTE
-  // =================================================
+  // ============================================
+  // FILTER BY ROUTE
+  // ============================================
 
   useEffect(() => {
 
@@ -71,9 +78,9 @@ function App() {
 
   }, [trains, selectedRoute]);
 
-  // =================================================
+  // ============================================
   // ANALYZE TRAIN
-  // =================================================
+  // ============================================
 
   const analyzeTrain = async (
     train
@@ -89,15 +96,19 @@ function App() {
 
       const response = await fetch(
 
-        `https://railai-backend.onrender1.com/predict/${train.train_no}`
+        `${API}/predict/${train.train_no}`
 
       );
 
       const data = await response.json();
 
+      console.log(data);
+
       setResult(data);
 
-    } catch {
+    } catch (err) {
+
+      console.log(err);
 
       setResult({
 
@@ -109,11 +120,12 @@ function App() {
     }
 
     setLoading(false);
+
   };
 
-  // =================================================
+  // ============================================
   // UI
-  // =================================================
+  // ============================================
 
   return (
 
@@ -140,11 +152,15 @@ function App() {
           <div className="stat">
 
             <h2>
+
               {filtered.length}
+
             </h2>
 
             <p>
+
               Active Trains
+
             </p>
 
           </div>
@@ -154,7 +170,9 @@ function App() {
             <h2>4</h2>
 
             <p>
+
               Loop Stations
+
             </p>
 
           </div>
@@ -185,16 +203,20 @@ function App() {
 
         </div>
 
-        {/* TABS */}
+        {/* ROUTE FILTER */}
 
         <div className="tabs">
 
           <button
 
             className={
+
               selectedRoute === "forward"
-              ? "tab active-tab"
-              : "tab"
+
+                ? "tab active-tab"
+
+                : "tab"
+
             }
 
             onClick={() =>
@@ -212,9 +234,13 @@ function App() {
           <button
 
             className={
+
               selectedRoute === "reverse"
-              ? "tab active-tab"
-              : "tab"
+
+                ? "tab active-tab"
+
+                : "tab"
+
             }
 
             onClick={() =>
@@ -239,6 +265,16 @@ function App() {
 
           <div className="train-panel">
 
+            {filtered.length === 0 && (
+
+              <div className="empty">
+
+                No active trains
+
+              </div>
+
+            )}
+
             {filtered.map((t, i) => (
 
               <div
@@ -250,9 +286,9 @@ function App() {
                   selectedTrain?.train_no
                   === t.train_no
 
-                  ? "train-card selected"
+                    ? "train-card selected"
 
-                  : "train-card"
+                    : "train-card"
 
                 }
 
@@ -379,7 +415,7 @@ function App() {
 
                 </div>
 
-                {/* NO CONFLICT */}
+                {/* SAFE */}
 
                 {result.message ? (
 
@@ -492,6 +528,7 @@ function App() {
     </div>
 
   );
+
 }
 
 export default App;
